@@ -27,8 +27,14 @@ app.controller('UserController', ['$scope', 'userService', "$ionicPopup", functi
 
     $scope.userService = userService;
 
-    $scope.getUsers = function (value) {
-        var promise = $scope.userService.getRandomUsers(value);
+    $scope.configuration = {
+        numberOfResults: 10,
+        gender: "male",
+        nationality: "DE"
+    }
+
+    $scope.getUsers = function (config) {
+        var promise = $scope.userService.getRandomUsers(config);
         promise.then(
          function (payload) {
              $scope.users = payload;
@@ -44,9 +50,20 @@ app.controller('UserController', ['$scope', 'userService', "$ionicPopup", functi
 }]);
 
 app.factory('userService', ['$http', function ($http) {
+    var buildQueryString = function (config) {
+        var url = "https://randomuser.me/api/";
+        
+
+
+        var query = url + "?results= " + config.numberOfResults + "&gender=" + config.gender + "&nat=" + config.nationality;
+
+         return query;
+    };
     return {
-        getRandomUsers: function (value) {
-            return $http.get("https://randomuser.me/api/?results=10").then(
+        getRandomUsers: function (config) {
+            var queryString = buildQueryString(config);
+
+            return $http.get(queryString).then(
               function (response) {
                   return response.data.results;
               },
@@ -54,6 +71,9 @@ app.factory('userService', ['$http', function ($http) {
                   // translate the error
                   throw httpError.statusText;
               });
+        },
+        buildQueryString: function (config) {
+
         }
     }
 }
