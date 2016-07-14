@@ -27,17 +27,18 @@
 
     <ion-pane>
       <ion-header-bar class="bar-stable">
-        <h1 class="title">Random Users</h1>
+          <h1 class="title">Random Users</h1>
+          <button class="button icon ion-refresh"></button>
       </ion-header-bar>
         <ion-content ng-controller="UserController">
 
-            <div class="item item-avatar">
+            <div ng-repeat="user in users" class="item item-avatar">
                 <img ng-src="{{user.picture.thumbnail}}">
                 <h2>{{user.name.first + ' ' + user.name.last}}</h2>
                 <p>{{user.email}}</p>
             </div>
 
-            <button ng-click="getNextUser()" class="button button-full button-positive">
+            <button ng-click="getUsers()" class="button button-full button-positive">
                 Get User
             </button>
         </ion-content>

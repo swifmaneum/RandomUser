@@ -23,32 +23,37 @@ var app = angular.module('starter', ['ionic'])
     });
 
 app.controller('UserController', ['$scope', 'userService', "$ionicPopup", function ($scope, userService, $ionicPopup) {
-    $scope.user = null;
+    $scope.users = null;
 
     $scope.userService = userService;
 
-    $scope.getNextUser = function (value) {
-        var promise = $scope.userService.getRandomUser(value);
+    $scope.getUsers = function (value) {
+        var promise = $scope.userService.getRandomUsers(value);
         promise.then(
-         function (response) {
-             $scope.user = response.data.results[0];
+         function (payload) {
+             $scope.users = payload;
          },
          function (errorPayload) {
 
              $ionicPopup.alert({
                  title: 'Ooops',
-                 template: errorPayload.statusText + ' Please try again!'
+                 template: errorPayload + '. Please try again!'
              });
-
-             console.log(errorPayload);
          });
     };
 }]);
 
 app.factory('userService', ['$http', function ($http) {
     return {
-        getRandomUser: function (value) {
-            return $http.get("https://randomuser.me/api/");
+        getRandomUsers: function (value) {
+            return $http.get("https://randomuser.me/api/?results=10").then(
+              function (response) {
+                  return response.data.results;
+              },
+              function (httpError) {
+                  // translate the error
+                  throw httpError.statusText;
+              });
         }
     }
 }
