@@ -28,7 +28,7 @@ app.controller('UserController', ['$scope', 'userService', "$ionicPopup", functi
     $scope.userService = userService;
 
     $scope.configuration = {
-        numberOfResults: 10,
+        numberOfResults: 3,
         gender: "male",
         nationality: "DE"
     }
@@ -52,12 +52,26 @@ app.controller('UserController', ['$scope', 'userService', "$ionicPopup", functi
 app.factory('userService', ['$http', function ($http) {
     var buildQueryString = function (config) {
         var url = "https://randomuser.me/api/";
-        
 
+        var number;
+        if (config.numberOfResults === null || config.numberOfResults === "" || isNaN(config.numberOfResults)) {
+            number = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
+        } else {
+            number = config.numberOfResults;
+        }
+        var numberQuery = "?results=" + number;
 
-        var query = url + "?results= " + config.numberOfResults + "&gender=" + config.gender + "&nat=" + config.nationality;
+        var genderQuery = "";
+        if (config.gender === "male" || config.gender === "female") {
+            genderQuery = "&gender=" + config.gender;
+        }
 
-         return query;
+        var natQuery = "";
+        if (config.nationality === "DE" || config.nationality === "US" || config.nationality === "GB") {
+            natQuery = "&nat=" + config.nationality;
+        }
+
+        return url + numberQuery + genderQuery + natQuery;
     };
     return {
         getRandomUsers: function (config) {
