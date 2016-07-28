@@ -28,7 +28,7 @@ app.controller('UserController', ['$scope', 'userService', "$ionicPopup", functi
     $scope.userService = userService;
 
     $scope.configuration = {
-        numberOfResults: 3,
+        //numberOfResults: 3,
         gender: "male",
         nationality: "DE"
     }
